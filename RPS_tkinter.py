@@ -1,47 +1,46 @@
-import  tkinter as tk
 import ttkbootstrap as ttk
+from tkinter import Canvas, PhotoImage
 import random
+import os
 
-me_data = 0
-user_data = 0
+comp_data = user_data = 0
 
-def end(window):
+def end(window, canvas):
     window.destroy()
 
-def new_user(window, bist, name,password):
+def canva_delete(bist,canvas):
 
-        
-    name_1 = name.get()
-    password_1 = str(password.get())
+    for i in bist:
+        canvas.delete(i)
 
-    name_s = name_1+'.txt'
+def label_delete(cist):
 
-    RPS(window, name_s, bist,password_1)
-
-def retry(window, display, button):
-    display.destroy()
-    button.destroy()
-
-    Bist = []
-
-    old_user(window,Bist)
-
-def old_user(window,Bist):
-
-    for i in Bist:
+    for i in cist:
         i.destroy()
 
-    style = ttk.Style()
-    style.configure('Body.TLabel',   
-                    foreground = 'white', 
-                    background = '#2a2438',
-                    font = ('Times New Roman', 13))
+def new_user_actions(window, canvas, cist, bist, style, name_entry, password_entry):
+
+    global name,password_entered
+
+    name_1 = name_entry.get()
+    password_entered = str(password_entry.get())
+
+    name = 'USER/'+name_1+'.txt'
+
+    RPS(window, canvas, cist, bist, style)
+
+def file_data_accessing(window, canvas, name_entry, cist, bist, password_entry, style):
+
+    global comp_data,user_data,password_entered,name
+
+    name_s = name_entry.get()
+    password_entered = password_entry.get()
     
-    style.configure('Header.TLabel',
-                    foreground = 'white', 
-                    background = '#2a2438', 
-                    font = ('Times New Roman', 15, 'bold'))
-    
+    style.configure('Entry.TEntry',
+                    foreground = 'white',
+                    background = '#79c2d0',
+                    font = ('Montserrat', 13))
+
     style.configure('Buttons.TButton',
                     foreground = 'white',
                     background = '#3f3752',
@@ -49,558 +48,479 @@ def old_user(window,Bist):
                     relief = 'raised',
                     highlightcolor = '#dbd8e3',
                     bordercolor = '#dbd8e3',
-                    font = ('Times New Roman', 13))
-    
-    style.configure('Entry.TEntry',
-                    foreground = 'black',
-                    background = '#79c2d0',
-                    font = ('Times New Roman', 13))
+                    font = ('Montserrat', 10))
 
-    welcome = ttk.Label(master=window,
-                       text='Good to have you back',
-                       style='Header.TLabel',
-                       anchor='center')
-    welcome.grid(row=0,
-                 column=11,
-                 pady=10,
-                 sticky='nsew')
-
-    ask_name = ttk.Label(window,
-                        text='Please enter your username',
-                        style='Body.TLabel',
-                        anchor='center') 
-    ask_name.grid(row=1, 
-                  column=11,
-                  pady=10,
-                  sticky='nsew')
-
-    name = ttk.Entry(window,
-                     style='Entry.TEntry')
-    name.grid(row=2,
-              column=11,
-              pady=10,
-              sticky='nsew')
-    
-    password = ttk.Entry(window,
-                         style = 'Entry.TEntry')
-    password.grid(row = 3,
-                  column = 11,
-                  pady = 10,
-                  sticky = 'nsew')
-
-    enter_button = ttk.Button(window,
-                             text='Done', 
-                             command=lambda: file_data_accessing(window, name, stuff,password),
-                             style='Buttons.TButton')
-    enter_button.grid(row=4, 
-                      column=15, 
-                      pady=10, 
-                      sticky='nsew')
-    
-    stuff = [welcome,ask_name,name,enter_button,password]
-
-def file_data_accessing(window, name, stuff, password):
-
-    name_s = name.get()
-    password_1 = str(password.get())
-
-    global me_data, user_data
-
-    for i in stuff:
-        i.destroy()
-
-    style = ttk.Style()
-    style.configure('Body.TLabel',   
-                    foreground = 'white', 
-                    background = '#2a2438',
-                    font = ('Times New Roman', 13))
-    
-    style.configure('Header.TLabel',
-                    foreground = 'white', 
-                    background = '#2a2438', 
-                    font = ('Times New Roman', 15, 'bold'))
-    
-    style.configure('Buttons.TButton',
-                    foreground = 'white',
-                    background = '#3f3752',
-                    borderwidth = 2,
-                    relief = 'raised',
-                    highlightcolor = '#dbd8e3',
-                    bordercolor = '#dbd8e3',
-                    font = ('Times New Roman', 13))
-    
-    style.configure('Entry.TEntry',
-                    foreground = 'black',
-                    background = '#79c2d0',
-                    font = ('Times New Roman', 13))
-    
-    style.configure('Red.TLabel',
-                    foreground = 'red', 
-                    background = '#2a2438', 
-                    font = ('Times New Roman', 15, 'bold'))
-
-    name = name_s + '.txt' 
+    name = 'USER/'+name_s+".txt"
     try:
-        with open(name, "r") as file:
+        with open(name,"r") as file:
             lines = file.readlines()
             if len(lines) == 3:
-                password_real, me, user = map(str.strip, lines)
-                me_data = int(me)
+                password_file, comp, user = map(str.strip, lines)
+                comp_data = int(comp)
                 user_data = int(user)
             else:
-                print('Error with the file having more than 3 lines in it')
+                print("Error with the file as it has less or more than 3")
 
-            if password_1 == password_real: 
+            if password_entered == password_file:
 
-                display_1 = ttk.Label(window,
-                                    text='From our last game',
-                                    style='Header.TLabel',
-                                    anchor='center')
-                display_1.grid(row=0, 
-                            column=11, 
-                            pady=10, 
-                            sticky='nsew')
+                canva_delete(bist, canvas)
+                label_delete(cist)
 
-                display_2 = ttk.Label(window,
-                                    text='Your points %s ' % (user_data),
-                                    style='Body.TLabel',
-                                    anchor='center')
-                display_2.grid(row=1, 
-                            column=11, 
-                            pady=10, 
-                            sticky='nsew')
+                display_1 = canvas.create_text(350,100,
+                                               text="From our last game",
+                                               fill="black",
+                                               font=('Montserrat',15,'bold'))
 
-                display_3 = ttk.Label(window, 
-                                    text='My points %s ' % (me_data),
-                                    style='Body.TLabel',
-                                    anchor='center')
-                display_3.grid(row=2, 
-                            column=11, 
-                            pady=10, 
-                            sticky='nsew')
+                display_2 = canvas.create_text(350,150,
+                                               text="Your points : %s" %(user_data),
+                                               fill="black",
+                                               font=('Montserrat',13))
 
-                button = ttk.Button(window, 
-                                text='continue', 
-                                command=lambda: RPS(window, name, bist, password),
-                                style='Buttons.TButton')
-                button.grid(row=3, 
-                            column=14, 
-                            pady=10, 
-                            sticky='nsew')
+                display_3 = canvas.create_text(339,200,
+                                               text="Machine points :  %s" %(comp_data),
+                                               fill="black",
+                                               font=('Montserrat',13))
 
-                bist = [ display_1, display_2, display_3, button]   
+                Continue = ttk.Button(canvas, 
+                                    text='Continue',
+                                    command=lambda: RPS(window, 
+                                                        canvas, 
+                                                        cist, 
+                                                        bist, 
+                                                        style), 
+                                    style='Buttons.TButton',
+                                    width=8)
+                canvas.create_window(400, 250, 
+                                     anchor="center", 
+                                     window=Continue)
 
+                if user_data > comp_data:
+                    age = PhotoImage(file="image/CHOSE/PAPER_S.png")
+                    useless = canvas.create_image(200, 
+                                                  200, 
+                                                  anchor="nw", 
+                                                  image=age)
+                    canvas.image = age
+
+                elif comp_data > user_data:
+                    age = PhotoImage(file="image/CHOSE/SCISSOR_B.png")
+                    useless = canvas.create_image(200, 
+                                                  200, 
+                                                  anchor="nw", 
+                                                  image=age)
+                    canvas.image = age
+
+                cist.clear()
+                bist.clear()
+                cist.append(Continue)
+                bist.extend([display_1, display_2, display_3, useless])
 
             else:
 
-                Display_1 = ttk.Label(window,
-                                      text = 'Incorrect password',
-                                      style = 'Red.TLabel',
-                                      anchor = 'center')
-                Display_1.grid(row = 1,
-                               column = 11,
-                               pady = 10,
-                               sticky = 'nsew')
-                
-                retry = ttk.Button(window,
-                                   text = 'Retry',
-                                   command = lambda: old_user(window,Bist), 
-                                   style = 'Buttons.TButton')
-                retry.grid(row = 2,
-                           column = 15,
-                            sticky = 'nsew')
+                wrong = canvas.create_text(480,250,
+                                           text = "Incorrect password",
+                                           fill = "Red",
+                                           font = ("Montserrat", 10))
 
-                Quit = ttk.Button(window,
-                                   text = 'Quit',
-                                   command = lambda: end(window),
-                                   style = 'Buttons.TButton')
-                Quit.grid(row = 2,
-                           column = 7,
-                            sticky = 'nsew')
-                
-                Bist = [Display_1,retry,Quit]
-                 
+                bist.append(wrong)
 
     except FileNotFoundError:
-        display = ttk.Label(window, 
-                           text='File Not found',
-                           style='Header.TLabel',
-                           anchor='center')
-        display.grid(row=0, 
-                     column=7, 
-                     pady=10, 
-                     sticky='nsew')
 
-        button = ttk.Button(window, 
-                           text = 'Retry', 
-                           command=lambda: retry(window, display, button),
-                           style='Buttons.TButton')
-        button.grid(row=1,
-                    column=7, 
-                    pady=10, 
-                    sticky='nsew')
-            
+        display = canvas.create_text(480,200,
+                                     text = 'Incorrect Username',
+                                     fill= "Red",
+                                     font = ("Montserrat", 10))
+
+        bist.append(display)
+
     except Exception as e:
-        print("error with the file stored data: ", e)
+        print("error with the file that has stored data : ", e)
+        print("Between lines 41 to 139")
 
-def RPS(window, name, bist,password):
-    
-    for i in bist:
-        i.destroy()
+def RPS(window, canvas, cist, bist, style):
 
-    style = ttk.Style()
-    style.configure('Body.TLabel',   
-                    foreground = 'white', 
-                    background = '#2a2438',
-                    font = ('Times New Roman', 13))
-    
-    style.configure('Header.TLabel',
-                    foreground = 'white', 
-                    background = '#2a2438', 
-                    font = ('Times New Roman', 15, 'bold'))
-    
+    global rist
+
+    rist = []
+
+    global comp_data, user_data
+
+    canva_delete(bist, canvas)
+    label_delete(cist)
+
+    style.configure('Entry.TEntry',
+                    foreground = 'white',
+                    background = '#79c2d0',
+                    font = ('Montserrat', 13))
+
     style.configure('Buttons.TButton',
+                    foreground = 'white',
+                    background = '#3f3752',
+                    borderwidth = 4,
+                    relief = 'raised',
+                    highlightcolor = '#dbd8e3',
+                    bordercolor = '#dbd8e3',
+                    font = ('Montserrat', 11))
+
+    style.configure('Option_Buttons.TButton',
                     foreground = 'white',
                     background = '#3f3752',
                     borderwidth = 2,
                     relief = 'raised',
                     highlightcolor = '#dbd8e3',
                     bordercolor = '#dbd8e3',
-                    font = ('Times New Roman', 13))
+                    font = ('Montserrat', 10))
+
+    Quit_button = ttk.Button(canvas,
+                             text = 'Quit',
+                             command = lambda : Data_Showing(window, canvas, cist, bist, style),
+                             style = 'Option_Buttons.TButton',
+                             width = 7)
+    canvas.create_window(600,400,
+                         anchor="center",
+                         window=Quit_button)
+
+    Option = canvas.create_text(260,100,
+                                text = "Choose",
+                                fill = "black",
+                                font = ('Montserrat',18,'bold'))
+
+    Rock_button = ttk.Button(canvas,
+                             text = 'Rock',
+                             command = lambda : Rock(window, canvas, Comp_Point, User_Point),
+                             style = 'Buttons.TButton',
+                             width = 7)
+    canvas.create_window(160,160,
+                         anchor = 'center',
+                         window = Rock_button)
+
+    Paper_button = ttk.Button(canvas,
+                              text = "Paper",
+                              command = lambda : Paper(window, canvas, Comp_Point, User_Point),
+                              style = "Buttons.TButton",
+                              width = 7)
+    canvas.create_window(260,160,
+                         anchor = 'center',
+                         window = Paper_button)
+
+    Scissor_button = ttk.Button(canvas,
+                                text = "Scissor",
+                                command = lambda : Scissor(window, canvas, Comp_Point, User_Point),
+                                style = "Buttons.TButton",
+                                width = 7)
+    canvas.create_window(360,160,
+                         anchor = 'center',
+                         window = Scissor_button)
+
+    Comp_Point = canvas.create_text(600,50,
+                                   text="Computer : %s" %(comp_data),
+                                   fill="#403a2b",
+                                   font=('Montserrat',13,'bold'))
+
+    User_Point = canvas.create_text(624,70,
+                                   text="You : %s" %(user_data),
+                                   fill="#403a2b",
+                                   font=('Montserrat',13,'bold'))
+
+    You = canvas.create_text(80,230,
+                             text="You Chose:",
+                             fill="black",
+                             font=('Montserrat',12,'bold'))
+
+    Comp = canvas.create_text(400,230,
+                             text="Computer Chose:",
+                             fill="black",
+                             font=('Montserrat',12,'bold'))
+
+    cist = [Quit_button, Rock_button, Paper_button, Scissor_button]
+    bist = [Option, Comp_Point, User_Point, You, Comp]
+
+def Rock(window, canvas, Comp_Point, User_Point):
+
+    global rist
+    global comp_data, user_data
+
+    canva_delete(rist, canvas)
     
-    style.configure('Entry.TEntry',
-                    foreground = 'black',
-                    background = '#79c2d0',
-                    font = ('Times New Roman', 13))
-
-    quit_button = ttk.Button(window,
-                            text='quit',
-                            command=lambda: file_data_saving(window, name, disable, password),
-                            style='Buttons.TButton')
-    quit_button.grid(row=10,
-                     column=17, 
-                     pady=10, 
-                     sticky='nsew')
-
-    option = ttk.Label(window, 
-                       text='Choose',
-                       style='Header.TLabel', 
-                       anchor='center')
-    option.grid(row=3, 
-                column=7, 
-                pady=10, 
-                sticky='nsew')
-
-    rock_button = ttk.Button(window, 
-                            text='rock', 
-                            command=lambda: Rock(window, me_1, you_1, word2, word3, result_label, result_label1),
-                            style='Buttons.TButton')
-    rock_button.grid(row=4, 
-                     column=3, 
-                     pady=10, 
-                     sticky='nsew')
-
-    paper_button = ttk.Button(window, 
-                             text='paper', 
-                             command=lambda: Paper(window, me_1, you_1, word2, word3, result_label, result_label1),
-                             style='Buttons.TButton')
-    paper_button.grid(row=4,
-                      column=7, 
-                      pady=10, 
-                      sticky='nsew')
-
-    scissors_button = ttk.Button(window, 
-                                text='scissors', 
-                                command=lambda: Scissors(window, me_1, you_1, word2, word3, result_label, result_label1),
-                                style='Buttons.TButton')
-    scissors_button.grid(row=4, 
-                         column=11, 
-                         pady=10, 
-                         sticky='nsew')
-
-    me_label = ttk.Label(window, 
-                        text='My point : ',
-                        style='Body.TLabel',
-                        anchor='center')
-    me_label.grid(row=0, 
-                  column=16, 
-                  pady=10, 
-                  sticky='nsew')
-
-    me_1 = ttk.Label(window, 
-                    text=me_data,
-                    style='Body.TLabel', 
-                    anchor='center')
-    me_1.grid(row=0, 
-              column=17,
-              pady=10, 
-              sticky='nsew')
-
-    you_label = ttk.Label(window, 
-                         text='Your point : ', 
-                         style='Body.TLabel',
-                         anchor='center')
-    you_label.grid(row=1, 
-                   column=16, 
-                   pady=10, 
-                   sticky='nsew')
-
-    result_label = ttk.Label(window, 
-                            text='',
-                            style='Body.TLabel',
-                            anchor='center')
-    result_label.grid(row=9, 
-                      column=7, 
-                      pady=10, 
-                      sticky='nsew')
-
-    result_label1 = ttk.Label(window, 
-                             text='',
-                             style='Body.TLabel', 
-                             anchor='center')
-    result_label1.grid(row=10, 
-                       column=7, 
-                       pady=10, 
-                       sticky='nsew')
-
-    you_1 = ttk.Label(window, 
-                     text=user_data,
-                     style='Body.TLabel',
-                     anchor='center')
-    you_1.grid(row=1, 
-               column=17, 
-               pady=10, 
-               sticky='nsew')
-
-    word = ttk.Label(window, 
-                    text='you chose : ',
-                    style='Body.TLabel',
-                    anchor='center')
-    word.grid(row=6, 
-              column=3, 
-              pady=10, 
-              sticky='nsew')
-
-    word2 = ttk.Label(window, 
-                     text='',
-                     style='Body.TLabel',
-                     anchor='center')
-    word2.grid(row=8, 
-               column=3, 
-               pady=10, 
-               sticky='nsew')
-
-    word1 = ttk.Label(window, 
-                     text='I chose : ',
-                     style='Body.TLabel',
-                     anchor='center')
-    word1.grid(row=6, 
-               column=11, 
-               pady=10, 
-               sticky='nsew')
-
-    word3 = ttk.Label(window, 
-                     text='',
-                     style='Body.TLabel',
-                     anchor='center')
-    word3.grid(row=8, 
-               column=11, 
-               pady=10, 
-               sticky='nsew')
-
-    disable = [quit_button,option,rock_button,paper_button,scissors_button,me_label,me_1,you_label,you_1,word,word2,word1,word3,result_label,result_label1]
-
-def Rock(window, me_1, you_1, word2, word3, result_label ,result_label1):
-
-    global me_data, user_data
-
     options = (1, 2, 3)  # rock, paper, scissors
-    choice = random.choice(options)
-    word2.config(text='Rock')
-
+    choice = random.choice(options)    
+ 
     if choice == 3:
         user_data += 1
-        text = 'Scissors'
-        user_win(text, window, me_1, you_1, word3, result_label, result_label1) 
+        subject = PhotoImage(file="image/CHOSE/ROCK_B.png")
+        useless_user = canvas.create_image(60, 
+                                           310, 
+                                           anchor="center", 
+                                           image=subject)   
+        canvas.image_subject = subject
+
+        something = PhotoImage(file="image/CHOSE/SCISSOR_S.png")
+        useless_comp = canvas.create_image(390, 
+                                           310, 
+                                           anchor="center", 
+                                           image=something)
+        canvas.image = something
+
 
     elif choice == 2:
-        me_data += 1
-        text='Paper'
-        user_lose(text, window, me_1, you_1, word3, result_label, result_label1)
+        comp_data += 1
+        subject = PhotoImage(file="image/CHOSE/ROCK_S.png")
+        useless_user = canvas.create_image(60, 
+                                           310, 
+                                           anchor="center", 
+                                           image=subject)   
+        canvas.image_subject = subject
 
+        something = PhotoImage(file="image/CHOSE/PAPER_B.png")
+        useless_comp = canvas.create_image(390, 
+                                           310, 
+                                           anchor="center", 
+                                           image=something)
+        canvas.image = something
+        
     else:
-        text = 'Rock'
-        user_draw(text, window, me_1, you_1, word3, result_label, result_label1)
+        subject = PhotoImage(file="image/CHOSE/ROCK_B.png")
+        useless_user = canvas.create_image(60, 
+                                           310, 
+                                           anchor="center", 
+                                           image=subject)   
+        canvas.image_subject = subject
+
+        something = PhotoImage(file="image/CHOSE/ROCK_B.png")
+        useless_comp = canvas.create_image(390, 
+                                           310, 
+                                           anchor="center", 
+                                           image=something)
+        canvas.image = something
+
+    canvas.itemconfig(Comp_Point, text="Computer : %s" % comp_data)
+    canvas.itemconfig(User_Point, text="You : %s" % user_data)
+
+    rist = [useless_comp, useless_user] 
+
+
 
     print('rock')
 
-def Paper(window, me_1, you_1, word2, word3, result_label, result_label1):
+def Paper(window, canvas, Comp_Point, User_Point):
+
+    global rist
+    global comp_data, user_data
+
+    canva_delete(rist, canvas)
     
-    global me_data, user_data
-
     options = (1, 2, 3)  # rock, paper, scissors
-    choice = random.choice(options)
-    word2.config(text='Paper')
-
+    choice = random.choice(options)    
+ 
     if choice == 1:
         user_data += 1
-        text = 'Rock'
-        user_win(text, window, me_1, you_1, word3, result_label, result_label1) 
+        subject = PhotoImage(file="image/CHOSE/PAPER_B.png")
+        useless_user = canvas.create_image(60, 
+                                           310, 
+                                           anchor="center", 
+                                           image=subject)   
+        canvas.image_subject = subject
+
+        something = PhotoImage(file="image/CHOSE/ROCK_S.png")
+        useless_comp = canvas.create_image(390, 
+                                           310, 
+                                           anchor="center", 
+                                           image=something)
+        canvas.image = something
 
     elif choice == 3:
-        me_data += 1
-        text='Scissors'
-        user_lose(text, window, me_1, you_1, word3, result_label, result_label1)
+        comp_data += 1
+        subject = PhotoImage(file="image/CHOSE/PAPER_S.png")
+        useless_user = canvas.create_image(60, 
+                                           310, 
+                                           anchor="center", 
+                                           image=subject)   
+        canvas.image_subject = subject
 
+        something = PhotoImage(file="image/CHOSE/SCISSOR_B.png")
+        useless_comp = canvas.create_image(390, 
+                                           310, 
+                                           anchor="center", 
+                                           image=something)
+        canvas.image = something
+        
     else:
-        text = 'Paper'
-        user_draw(text, window, me_1, you_1, word3, result_label, result_label1)
+        subject = PhotoImage(file="image/CHOSE/PAPER_B.png")
+        useless_user = canvas.create_image(60, 
+                                           310, 
+                                           anchor="center", 
+                                           image=subject)   
+        canvas.image_subject = subject
 
-    print("paper")
+        something = PhotoImage(file="image/CHOSE/PAPER_B.png")
+        useless_comp = canvas.create_image(390, 
+                                           310, 
+                                           anchor="center", 
+                                           image=something)
+        canvas.image = something
 
-def Scissors(window, me_1, you_1, word2, word3, result_label, result_label1):
+    canvas.itemconfig(Comp_Point, text="Computer : %s" % comp_data)
+    canvas.itemconfig(User_Point, text="You : %s" % user_data)
 
-    global me_data, user_data
+    rist = [useless_comp, useless_user]
 
+    print('rock')
+
+def Scissor(window, canvas, Comp_Point, User_Point):
+
+    global rist
+    global comp_data, user_data
+
+    canva_delete(rist, canvas)
+    
     options = (1, 2, 3)  # rock, paper, scissors
-    choice = random.choice(options)
-    word2.config(text='Scissors')
-
+    choice = random.choice(options)    
+ 
     if choice == 2:
         user_data += 1
-        text = 'Paper'
-        user_win(text, window, me_1, you_1, word3, result_label, result_label1)       
+        subject = PhotoImage(file="image/CHOSE/SCISSOR_B.png")
+        useless_user = canvas.create_image(60, 
+                                           310, 
+                                           anchor="center", 
+                                           image=subject)   
+        canvas.image_subject = subject
+
+        something = PhotoImage(file="image/CHOSE/PAPER_S.png")
+        useless_comp = canvas.create_image(390, 
+                                           310, 
+                                           anchor="center", 
+                                           image=something)
+        canvas.image = something
 
     elif choice == 1:
-        me_data += 1
-        text = 'Rock'
-        user_lose(text, window, me_1, you_1, word3, result_label, result_label1)
+        comp_data += 1
+        subject = PhotoImage(file="image/CHOSE/SCISSOR_S.png")
+        useless_user = canvas.create_image(60, 
+                                           310, 
+                                           anchor="center", 
+                                           image=subject)   
+        canvas.image_subject = subject
 
+        something = PhotoImage(file="image/CHOSE/ROCK_B.png")
+        useless_comp = canvas.create_image(390, 
+                                           310, 
+                                           anchor="center", 
+                                           image=something)
+        canvas.image = something
+        
     else:
-        text = 'Scissors'
-        user_draw(text, window, me_1, you_1, word3, result_label, result_label1)
+        subject = PhotoImage(file="image/CHOSE/SCISSOR_B.png")
+        useless_user = canvas.create_image(60, 
+                                           310, 
+                                           anchor="center", 
+                                           image=subject)   
+        canvas.image_subject = subject
 
-    print("scissors")
+        something = PhotoImage(file="image/CHOSE/SCISSOR_B.png")
+        useless_comp = canvas.create_image(390, 
+                                           310, 
+                                           anchor="center", 
+                                           image=something)
+        canvas.image = something
 
-def user_win(text, window, me_1, you_1, word3, result_label, result_label1):
+    canvas.itemconfig(Comp_Point, text="Computer : %s" % comp_data)
+    canvas.itemconfig(User_Point, text="You : %s" % user_data)
 
-    me_1.config(text=me_data)
-    you_1.config(text=user_data)
-    word3.config(text=text)
-    result_label.config(text='U win')
-    result_label1.config(text='ಠ_ಠ')
+    rist = [useless_comp, useless_user] 
 
-def user_lose(text, window, me_1, you_1, word3, result_label, result_label1):
+    print('Scissor')
 
-    me_1.config(text=me_data)
-    you_1.config(text=user_data)
-    word3.config(text=text)
-    result_label.config(text='I win')
-    result_label1.config(text='(⌐■_■)')
+def Data_Showing(window, canvas, cist, bist, style):
 
-def user_draw(text, window, me_1, you_1, word3, result_label, result_label1):
+    canva_delete(bist,canvas)
+    canva_delete(rist,canvas)
+    label_delete(cist)
 
-    me_1.config(text=me_data)
-    you_1.config(text=user_data)
-    word3.config(text=text)
-    result_label.config(text='Draw')
-    result_label1.config(text='(〃￣︶￣)人')
+    style.configure('Entry.TEntry',
+                    foreground = 'white',
+                    background = '#79c2d0',
+                    font = ('Montserrat', 13))
 
-def file_data_saving(window, name, disable, password):
-
-    style = ttk.Style()
-    style.configure('Body.TLabel',   
-                    foreground = 'white', 
-                    background = '#2a2438',
-                    font = ('Times New Roman', 13))
-    
-    style.configure('Header.TLabel',
-                    foreground = 'white', 
-                    background = '#2a2438', 
-                    font = ('Times New Roman', 15, 'bold'))
-    
     style.configure('Buttons.TButton',
+                    foreground = 'white',
+                    background = '#3f3752',
+                    borderwidth = 4,
+                    relief = 'raised',
+                    highlightcolor = '#dbd8e3',
+                    bordercolor = '#dbd8e3',
+                    font = ('Montserrat', 11))
+
+    style.configure('Option_Buttons.TButton',
                     foreground = 'white',
                     background = '#3f3752',
                     borderwidth = 2,
                     relief = 'raised',
                     highlightcolor = '#dbd8e3',
                     bordercolor = '#dbd8e3',
-                    font = ('Times New Roman', 13))
-    
-    style.configure('Entry.TEntry',
-                    foreground = 'black',
-                    background = '#79c2d0',
-                    font = ('Times New Roman', 13))
+                    font = ('Montserrat', 10))
 
-    for i in disable:
-        i.destroy()
+    bg_image = PhotoImage(file="image/end.png")
+    balls = canvas.create_image(-3, 
+                                -3, 
+                                anchor="nw", 
+                                image=bg_image)
+    canvas.background = bg_image
+
+    comp=str(comp_data)
+    user=str(user_data)
+    password = password_entered
 
     try:
         with open(name,"w") as file:
             pass
         with open(name,"w") as file:
-            me=str(me_data)
-            user=str(user_data)
             file.write(password+'\n')
-            file.write(me+"\n")
+            file.write(comp+"\n")
             file.write(user+"\n")
     except Exception as e:
         print("error while storing data : ",e)
 
-    you = ttk.Label(window, 
-                    text='Your points : %s' %(user_data),
-                    style='Header.TLabel',
-                    anchor='center')
-    you.grid(row=1, 
-             column=11, 
-             pady=10, 
-             sticky='nsew')
-
-    me = ttk.Label(window, 
-                   text='My points : %s' %(me_data),
-                   style='Header.TLabel',
-                   anchor='center')
-    me.grid(row=2, 
-            column=11, 
-            pady=10, 
-            sticky='nsew')
-
-    done = ttk.Button(window, 
+    user_point = canvas.create_text(350,100,
+                                    text ='Your points : %s' %(user_data),
+                                    fill = "black",
+                                    font = ('Montserrat',13,'bold'))
+    
+    comp_point = canvas.create_text(350,150,
+                                    text='Computer points : %s' %(comp_data),
+                                    fill = "black",
+                                    font = ('Montserrat',13,'bold'))
+    
+    done = ttk.Button(canvas, 
                       text='Done', 
-                      command= lambda : end(window), 
-                      style='Buttons.TButton' )
-    done.grid(row=3, 
-              column=15, 
-              pady=10, 
-              sticky='nsew')
+                      command= lambda : end(window,canvas), 
+                      style='Buttons.TButton',
+                      width = 6)
+    canvas.create_window(450,200,
+                         anchor = 'center',
+                         window = done)
 
-    go_back = ttk.Button(window, 
+    go_back = ttk.Button(canvas, 
                          text='Return', 
-                         command= lambda : RPS(window,name,bist),
-                         style='Buttons.TButton')
-    go_back.grid(row=3, 
-                 column=7, 
-                 pady=10, 
-                 sticky='nsew') 
- 
-    bist = [you, me, done, go_back]
+                         command= lambda : RPS(window, canvas, cist, bist, style),
+                         style='Buttons.TButton',
+                         width = 6)
+    canvas.create_window(200,200,
+                         anchor = 'center',
+                         window = go_back)
 
-def no(window, cist):
-    for i in cist:
-        i.destroy()
+    bist = [user_point,comp_point,balls]
+    cist = [go_back,done]
 
-    style = ttk.Style()
-    style.configure('Body.TLabel',   
-                    foreground = 'white', 
-                    background = '#2a2438',
-                    font = ('Times New Roman', 13))
-    
-    style.configure('Header.TLabel',
-                    foreground = 'white', 
-                    background = '#2a2438', 
-                    font = ('Times New Roman', 15, 'bold'))
-    
+def Old_user(window,canvas,cist,style,bist):
+
+    canva_delete(bist, canvas)
+    label_delete(cist)
+
+    style.configure('Entry.TEntry',
+                    foreground = 'white',
+                    background = '#79c2d0',
+                    font = ('Montserrat', 13))
+
     style.configure('Buttons.TButton',
                     foreground = 'white',
                     background = '#3f3752',
@@ -608,148 +528,220 @@ def no(window, cist):
                     relief = 'raised',
                     highlightcolor = '#dbd8e3',
                     bordercolor = '#dbd8e3',
-                    font = ('Times New Roman', 13))
-    
+                    font = ('Montserrat', 10))
+
+    big_image = PhotoImage(file="image/CHOSE/ROCK_B.png")
+    useless = canvas.create_image(150, 
+                        350, 
+                        anchor="nw", 
+                        image=big_image)
+
+    canvas.image = big_image
+
+    intro = canvas.create_text(350,100,
+                       text="Good to have You back",
+                       fill="black",
+                       font=('Montserrat',15,'bold'))
+
+    head = canvas.create_text(350,150,
+                              text="Please enter the following data",
+                              fill="black",
+                              font=('Montserrat',13))
+
+    name_entry = ttk.Entry(window, 
+                           style='Entry.TEntry')
+    canvas.create_window(350, 200, 
+                         anchor="center", 
+                         window=name_entry)
+
+    password_entry = ttk.Entry(window, 
+                               style='Entry.TEntry')
+    canvas.create_window(350, 250, 
+                         anchor="center", 
+                         window=password_entry)
+
+    name = canvas.create_text(235,200,
+                              text="Username",
+                              fill="black",
+                              font=('Montserrat',13))
+
+    password = canvas.create_text(235,250,
+                              text="Password",
+                              fill="black",
+                              font=('Montserrat',13))
+
+    submit = ttk.Button(canvas, 
+                        text='Submit',
+                        command=lambda: file_data_accessing(window, 
+                                                            canvas, 
+                                                            name_entry, 
+                                                            cist, 
+                                                            bist, 
+                                                            password_entry, 
+                                                            style), 
+                        style='Buttons.TButton',
+                        width=7)
+    canvas.create_window(400, 300, 
+                         anchor="center", 
+                         window=submit)
+
+    cist = [password_entry, name_entry, submit]
+    bist = [intro, head,  name,  password, useless]
+
+def new_user(window,canvas,cist,style,bist):
+    canva_delete(bist, canvas)
+    label_delete(cist)
+
+    style.configure('Entry.TEntry',
+                    foreground = 'white',
+                    background = '#79c2d0',
+                    font = ('Montserrat', 13))
+
+    style.configure('Buttons.TButton',
+                    foreground = 'white',
+                    background = '#3f3752',
+                    borderwidth = 2,
+                    relief = 'raised',
+                    highlightcolor = '#dbd8e3',
+                    bordercolor = '#dbd8e3',
+                    font = ('Montserrat', 10))
+
+    big_image = PhotoImage(file="image/CHOSE/ROCK_S.png")
+    useless = canvas.create_image(150, 
+                        350, 
+                        anchor="nw", 
+                        image=big_image)
+
+    canvas.image = big_image
+
+    intro = canvas.create_text(350,100,
+                       text="Good to have You",
+                       fill="black",
+                       font=('Montserrat',15,'bold'))
+
+    head = canvas.create_text(350,150,
+                              text="Please enter the following data",
+                              fill="black",
+                              font=('Montserrat',13))
+
+    name_entry = ttk.Entry(window, 
+                           style='Entry.TEntry')
+    canvas.create_window(350, 200, 
+                         anchor="center", 
+                         window=name_entry)
+
+    password_entry = ttk.Entry(window, 
+                               style='Entry.TEntry')
+    canvas.create_window(350, 250, 
+                         anchor="center", 
+                         window=password_entry)
+
+    name = canvas.create_text(235,200,
+                              text="Username",
+                              fill="black",
+                              font=('Montserrat',13))
+
+    password = canvas.create_text(235,250,
+                              text="Password",
+                              fill="black",
+                              font=('Montserrat',13))
+
+    submit = ttk.Button(canvas, 
+                        text='Submit',
+                        command=lambda: new_user_actions(window, canvas, cist, bist, style, name_entry, password_entry), 
+                        style='Buttons.TButton',
+                        width=7)
+    canvas.create_window(400, 300, 
+                         anchor="center", 
+                         window=submit)
+
+    cist = [password_entry, name_entry, submit]
+    bist = [intro, head,  name,  password, useless]
+
+def func(window,canvas):
+    # Add text directly to the Canvas with a transparent background
+
+    style = ttk.Style()
+
+    style.configure('Buttons.TButton',
+                     foreground='white',
+                     background='#00eadc',
+                     borderwidth=2,
+                     relief='raised',
+                     highlightcolor='#31572c',
+                     bordercolor='#dbd8e3',
+                     font=('Montserrat', 13))
+
     style.configure('Entry.TEntry',
                     foreground = 'black',
                     background = '#79c2d0',
-                    font = ('Times New Roman', 13))
+                    font = ('Montserrat', 13))
 
-    welcome = ttk.Label(window,
-                        text='Good to have you', 
-                        style='Header.TLabel',
-                        anchor='center')
-    welcome.grid(row=0, 
-                 column=11, 
-                 pady=10, 
-                 sticky='nsew')
+    image = PhotoImage(file="image/CHOSE/PAPER_B.png")
+    useless = canvas.create_image(189, 
+                                  158, 
+                                  anchor="nw", 
+                                  image=image)
 
-    ask_name = ttk.Label(window, 
-                         text='Please enter the username you would like to use',
-                         style='Body.TLabel',
-                         anchor='center')
-    ask_name.grid(row=1, 
-                  column=11, 
-                  pady=10, 
-                  sticky='nsew')
+    canvas.image = image
 
-    name = ttk.Entry(window, 
-                    style = 'Entry.TEntry')
-    name.grid(row=2, 
-              column=11, 
-              pady=10, 
-              sticky='nsew')
+    intro = canvas.create_text(350, 100, 
+                               text="Welcome to Rock, Paper and Scissors", 
+                               fill="black", 
+                               font=('Montserrat', 15, 'bold'))
     
-    password = ttk.Entry(window,
-                         style = 'Entry.TEntry')
-    password.grid(row = 3,
-                  column = 11,
-                  pady = 10,
-                  sticky = 'nsew')
+    ask = canvas.create_text(350, 200, 
+                             text="Are you an old user?", 
+                             fill="black", 
+                             font=('Montserrat', 13))
 
-    enter_button = ttk.Button(window, 
-                              text='Done', 
-                              command=lambda: new_user(window,bist,name,password),
-                              style='Buttons.TButton')
-    enter_button.grid(row=4, 
-                      column=12, 
-                      pady=10, 
-                      sticky='nsew')
     
-    Back_button = ttk.Button(window,
-                             text = 'Back',
-                             command=lambda: func(window,bist),
-                             style = 'Buttons.TButton')
-    Back_button.grid(row=4,
-                     column=10,
-                     pady=10,
-                     sticky='nsew')
 
-    bist = [welcome,ask_name,name,enter_button,Back_button,password]
-    
-def func(window,bist):
+    # You can place buttons directly on the canvas using 'window'
+    yes_button = ttk.Button(canvas, 
+                            text='Yes',
+                            command=lambda: Old_user(window,canvas,cist,style,bist), 
+                            style='Buttons.TButton',
+                            width=10)
+    canvas.create_window(250, 300, 
+                         anchor="center", 
+                         window=yes_button)
 
-    style = ttk.Style()
+    no_button = ttk.Button(canvas, 
+                           text='No',
+                           command=lambda: new_user(window,canvas,cist,style,bist), 
+                           style='Buttons.TButton',
+                           width=10)
+    canvas.create_window(450, 300, 
+                         anchor="center", 
+                         window=no_button)
 
-    for i in bist:
-        i.destroy()
-
-    style.configure('Body.TLabel',   
-                    foreground = 'white', 
-                    background = '#2a2438',
-                    font = ('Times New Roman', 13))
-    
-    style.configure('Header.TLabel',
-                    foreground = 'white', 
-                    background = '#2a2438', 
-                    font = ('Times New Roman', 15, 'bold'))
-    
-    style.configure('Buttons.TButton',
-                    foreground = 'white',
-                    background = '#3f3752',
-                    borderwidth = 2,
-                    relief = 'raised',
-                    highlightcolor = '#dbd8e3',
-                    bordercolor = '#dbd8e3',
-                    font = ('Times New Roman', 13))
-    
-    intro = ttk.Label(window, 
-                      text='Welcome to Rock, Paper and Scissors', 
-                      style = 'Header.TLabel',
-                      anchor='center')
-    intro.grid(row=0, 
-               column=11, 
-               pady=2, 
-               sticky='nsew')
-
-    about = ttk.Label(window, 
-                      text='Are you an old user?',
-                      style = 'Body.TLabel',
-                      anchor='center')
-    about.grid(row=1, 
-               column=11, 
-               pady=2, 
-               sticky='nsew')
-    
-    yes_button = ttk.Button(window, 
-                            text='Yes', 
-                            command=lambda: old_user(window, cist), 
-                            style = 'Buttons.TButton',
-                            width=3)
-    yes_button.grid(row=2, 
-                    column=7, 
-                    pady=2, 
-                    sticky='nsew')
-    
-    no_button = ttk.Button(window, 
-                           text='No', 
-                           command=lambda: no(window, cist),
-                           style = 'Buttons.TButton',
-                           width=3)
-    no_button.grid(row=2, 
-                   column=15, 
-                   pady=2, 
-                   sticky='nsew')
-    
-    cist = [intro, about, yes_button, no_button] 
-
+    cist = [no_button ,yes_button]
+    bist = [intro ,ask ,useless]
 
 def welcome():
 
-    window = ttk.Window()
-    window.configure(background = '#2a2438' )
+    window = ttk.Window(themename="darkly")
     window.title("Rock Paper Scissors")
     window.geometry('700x500') 
-    
-    
-    # Configure the grid to center widgets
-    for i in range(21):
-        window.grid_columnconfigure(i, weight=1)
-        window.grid_rowconfigure(i, weight=1)
+    window.resizable(False,False)
 
-    bist=[]
+    canvas = Canvas(window,
+                    width=700, 
+                    height=500)
+    canvas.place(x=0, 
+                 y=0, 
+                 relwidth=1.5, 
+                 relheight=1.5)
 
-    func(window,bist)
-    
+    bg_image = PhotoImage(file="image/START.png")
+    canvas.create_image(-3, 
+                        -3, 
+                        anchor="nw", 
+                        image=bg_image)
+
+    func(window,canvas)
     
     window.mainloop()
+
+welcome()
