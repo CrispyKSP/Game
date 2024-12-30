@@ -35,20 +35,6 @@ def file_data_accessing(window, canvas, name_entry, cist, bist, password_entry, 
 
     name_s = name_entry.get()
     password_entered = password_entry.get()
-    
-    style.configure('Entry.TEntry',
-                    foreground = 'white',
-                    background = '#79c2d0',
-                    font = ('Montserrat', 13))
-
-    style.configure('Buttons.TButton',
-                    foreground = 'white',
-                    background = '#3f3752',
-                    borderwidth = 2,
-                    relief = 'raised',
-                    highlightcolor = '#dbd8e3',
-                    bordercolor = '#dbd8e3',
-                    font = ('Montserrat', 10))
 
     name = 'USER/'+name_s+".txt"
     try:
@@ -147,20 +133,6 @@ def RPS(window, canvas, cist, bist, style):
 
     canva_delete(bist, canvas)
     label_delete(cist)
-
-    style.configure('Entry.TEntry',
-                    foreground = 'white',
-                    background = '#79c2d0',
-                    font = ('Montserrat', 13))
-
-    style.configure('Buttons.TButton',
-                    foreground = 'white',
-                    background = '#3f3752',
-                    borderwidth = 4,
-                    relief = 'raised',
-                    highlightcolor = '#dbd8e3',
-                    bordercolor = '#dbd8e3',
-                    font = ('Montserrat', 11))
 
     style.configure('Option_Buttons.TButton',
                     foreground = 'white',
@@ -436,29 +408,6 @@ def Data_Showing(window, canvas, cist, bist, style):
     canva_delete(rist,canvas)
     label_delete(cist)
 
-    style.configure('Entry.TEntry',
-                    foreground = 'white',
-                    background = '#79c2d0',
-                    font = ('Montserrat', 13))
-
-    style.configure('Buttons.TButton',
-                    foreground = 'white',
-                    background = '#3f3752',
-                    borderwidth = 4,
-                    relief = 'raised',
-                    highlightcolor = '#dbd8e3',
-                    bordercolor = '#dbd8e3',
-                    font = ('Montserrat', 11))
-
-    style.configure('Option_Buttons.TButton',
-                    foreground = 'white',
-                    background = '#3f3752',
-                    borderwidth = 2,
-                    relief = 'raised',
-                    highlightcolor = '#dbd8e3',
-                    bordercolor = '#dbd8e3',
-                    font = ('Montserrat', 10))
-
     bg_image = PhotoImage(file="image/end.png")
     balls = canvas.create_image(-3, 
                                 -3, 
@@ -515,20 +464,6 @@ def Old_user(window,canvas,cist,style,bist):
 
     canva_delete(bist, canvas)
     label_delete(cist)
-
-    style.configure('Entry.TEntry',
-                    foreground = 'white',
-                    background = '#79c2d0',
-                    font = ('Montserrat', 13))
-
-    style.configure('Buttons.TButton',
-                    foreground = 'white',
-                    background = '#3f3752',
-                    borderwidth = 2,
-                    relief = 'raised',
-                    highlightcolor = '#dbd8e3',
-                    bordercolor = '#dbd8e3',
-                    font = ('Montserrat', 10))
 
     big_image = PhotoImage(file="image/CHOSE/ROCK_B.png")
     useless = canvas.create_image(150, 
@@ -591,20 +526,6 @@ def Old_user(window,canvas,cist,style,bist):
 def new_user(window,canvas,cist,style,bist):
     canva_delete(bist, canvas)
     label_delete(cist)
-
-    style.configure('Entry.TEntry',
-                    foreground = 'white',
-                    background = '#79c2d0',
-                    font = ('Montserrat', 13))
-
-    style.configure('Buttons.TButton',
-                    foreground = 'white',
-                    background = '#3f3752',
-                    borderwidth = 2,
-                    relief = 'raised',
-                    highlightcolor = '#dbd8e3',
-                    bordercolor = '#dbd8e3',
-                    font = ('Montserrat', 10))
 
     big_image = PhotoImage(file="image/CHOSE/ROCK_S.png")
     useless = canvas.create_image(150, 
@@ -673,7 +594,7 @@ def func(window,canvas):
                      font=('Montserrat', 13))
 
     style.configure('Entry.TEntry',
-                    foreground = 'black',
+                    foreground = 'White',
                     background = '#79c2d0',
                     font = ('Montserrat', 13))
 
